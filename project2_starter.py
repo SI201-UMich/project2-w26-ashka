@@ -1,7 +1,7 @@
 # SI 201 HW4 (Library Checkout System)
-# Your name:
-# Your student id:
-# Your email:
+# Your name: Ashka Patel and Lynn Van
+# Your student id: 53816807
+# Your email: ashkap@umich.edu
 # Who or what you worked with on this homework (including generative AI like ChatGPT):
 # If you worked with generative AI also add a statement for how you used it.
 # e.g.:
@@ -38,13 +38,19 @@ def load_listing_results(html_path) -> list[tuple]:
         list[tuple]: A list of tuples containing (listing_title, listing_id)
     """
     # TODO: Implement checkout logic following the instructions
-    # ==============================
-    # YOUR CODE STARTS HERE
-    # ==============================
-    pass
-    # ==============================
-    # YOUR CODE ENDS HERE
-    # ==============================
+    with open(html_path, 'r', encoding='utf-8-sig') as f:
+        content = f.read()
+        soup = BeautifulSoup(content, 'html.parser')
+        listings_list = []
+        titles = soup.find_all('div', class_='t1j9t6p5')
+        links = soup.find_all('a', class_='rf60p66')
+        for i in range(len(titles)):
+            title_text = titles[i].text
+            link_url = links[i]['href]']
+            listing_id = link_url.split('/')[-1]
+
+            listings_list.append((title_text, listing_id))
+
 
 
 def get_listing_details(listing_id) -> dict:
