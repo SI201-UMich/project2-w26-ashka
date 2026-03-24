@@ -110,7 +110,7 @@ def get_listing_details(listing_id) -> dict:
         else:
             room_type = "Entire Room"
         
-        return {listing_id: {"policy_number": policy, "host_type": host_type, "host_name": host_name, "room_type": room_type, "location_rating": location_rating}}
+    return {listing_id: {"policy_number": policy, "host_type": host_type, "host_name": host_name, "room_type": room_type, "location_rating": location_rating}}
 
 
 def create_listing_database(html_path) -> list[tuple]:
