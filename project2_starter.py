@@ -1,10 +1,10 @@
 # SI 201 HW4 (Library Checkout System)
 # Your name: Ashka Patel and Lynn Van
-# Your student id: 53816807
-# Your email: ashkap@umich.edu
+# Your student id: 53816807, 15287597
+# Your email: ashkap@umich.edu, lynnvan@umich.edu
 # Who or what you worked with on this homework (including generative AI like ChatGPT):
 # If you worked with generative AI also add a statement for how you used it.
-# e.g.: ashka patel
+# e.g.: ashka patel, lynn van
 # Asked ChatGPT for hints on debugging and for suggestions on overall code structure
 #
 # Did your use of GenAI on this assignment align with your goals and guidelines in your Gen AI contract? If not, why?
