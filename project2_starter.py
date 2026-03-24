@@ -39,8 +39,7 @@ def load_listing_results(html_path) -> list[tuple]:
     """
     # TODO: Implement checkout logic following the instructions
     with open(html_path, 'r', encoding='utf-8-sig') as f:
-        content = f.read()
-        soup = BeautifulSoup(content, 'html.parser')
+        soup = BeautifulSoup(f, 'html.parser')
         listings_list = []
         titles = soup.find_all('div', class_='t1j9t6p5')
         links = soup.find_all('a', class_='rf60p66')
@@ -73,9 +72,7 @@ def get_listing_details(listing_id) -> dict:
     """
     html_path = f"html_files/listing_{listing_id}.html"
     with open(html_path, 'r', encoding='utf-8-sig') as f:
-        content = f.read()
-        soup = BeautifulSoup(content, 'html.parser')
-
+        soup = BeautifulSoup(f, 'html.parser')
 
         superhost_tag = soup.find(text="Superhost")
         if superhost_tag: 
