@@ -48,7 +48,7 @@ def load_listing_results(html_path) -> list[tuple]:
             link_url = links[i]['href']
             listing_id = link_url.split('/')[-1]
             listings_list.append((title_text, listing_id))
-
+    
 
 
 def get_listing_details(listing_id) -> dict:
@@ -232,7 +232,16 @@ class TestCases(unittest.TestCase):
     def test_load_listing_results(self):
         # TODO: Check that the number of listings extracted is 18.
         # TODO: Check that the FIRST (title, id) tuple is  ("Loft in Mission District", "1944564").
-        pass
+
+        filename = "/Users/lynnvan/SI206/project2-w26-ashka/search_results.html" 
+        
+        results = load_listing_results(filename)
+
+        self.assertEqual(len(results), 18, "The function should extract exactly 18 listings.")
+
+        expected_first_tuple = ("Loft in Mission District", "1944564")
+        self.assertEqual(results[0], expected_first_tuple, f"Expected {expected_first_tuple} but got {results[0]}")
+
 
     def test_get_listing_details(self):
         html_list = ["467507", "1550913", "1944564", "4614763", "6092596"]
