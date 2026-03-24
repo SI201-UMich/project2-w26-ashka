@@ -46,9 +46,8 @@ def load_listing_results(html_path) -> list[tuple]:
         links = soup.find_all('a', class_='rf60p66')
         for i in range(len(titles)):
             title_text = titles[i].text
-            link_url = links[i]['href]']
+            link_url = links[i]['href']
             listing_id = link_url.split('/')[-1]
-
             listings_list.append((title_text, listing_id))
 
 
@@ -72,14 +71,49 @@ def get_listing_details(listing_id) -> dict:
             }
         }
     """
-    # TODO: Implement checkout logic following the instructions
-    # ==============================
-    # YOUR CODE STARTS HERE
-    # ==============================
-    pass
-    # ==============================
-    # YOUR CODE ENDS HERE
-    # ==============================
+    html_path = f"html_files/listing_{listing_id}.html"
+    with open(html_path, 'r', encoding='utf-8-sig') as f:
+        content = f.read()
+        soup = BeautifulSoup(content, 'html.parser')
+
+
+        superhost_tag = soup.find(text="Superhost")
+        if superhost_tag: 
+            host_type = "Superhost"
+        else: 
+            host_type = "Regular"
+        
+        host_tag = soup.find('h2', class_='_147n6cc')
+        if host_tag:
+            raw_text = host_tag.text
+            host_name = raw_text.replace("Hosted by ", "")
+        else:
+            host_name = ""  
+
+        policy_tag = soup.find('li', class_='f19phm70')
+        policy_raw = policy_tag.text if policy_tag else ""
+        
+        if "pending" in policy_raw.lower():
+            policy = "Pending"
+        elif "not needed" in policy_raw.lower() or "exempt" in policy_raw.lower():
+            policy = "Exempt"
+        else:
+            policy = policy_raw.strip()
+        
+        rating_tag = soup.find('span', class_='_17p698z')
+        if rating_tag: 
+            location_rating = float(rating_tag.text)
+        else: 
+            location_rating = 0.0
+
+        if "private room" in soup.text.lower():
+            room_type = "Private Room"
+        elif "shared room" in soup.text.lower():
+            room_type = "Shared Room"
+        else:
+            room_type = "Entire Room"
+        
+        return {listing_id: {"policy_number": policy, "host_type": host_type, "host_name": host_name, "room_type": room_type, "location_rating": location_rating}}
 
 
 def create_listing_database(html_path) -> list[tuple]:
