@@ -48,8 +48,9 @@ def load_listing_results(html_path) -> list[tuple]:
             link_url = links[i]['href']
             listing_id = link_url.split('/')[-1]
             listings_list.append((title_text, listing_id))
+    print()
+    return listings_list
     
-
 
 def get_listing_details(listing_id) -> dict:
     """
