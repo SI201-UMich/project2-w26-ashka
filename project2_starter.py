@@ -40,15 +40,21 @@ def load_listing_results(html_path) -> list[tuple]:
     # TODO: Implement checkout logic following the instructions
     with open(html_path, 'r', encoding='utf-8-sig') as f:
         soup = BeautifulSoup(f, 'html.parser')
-        listings_list = []
-        titles = soup.find_all('div', class_='t1j9t6p5')
-        links = soup.find_all('a', class_='rf60p66')
-        for i in range(len(titles)):
-            title_text = titles[i].text
-            link_url = links[i]['href']
-            listing_id = link_url.split('/')[-1]
-            listings_list.append((title_text, listing_id))
-    print()
+        
+    listings_list = []
+    titles = soup.find_all('div', class_='t1jojoys dir dir-ltr')
+    print("titles: ", titles)
+
+     <div class="t1jojoys dir dir-ltr" data-testid="listing-card-title" id="title_49043049">Home in Mission District</div>,
+
+    links = soup.find_all('a', class_='cy5jw6o')
+        
+    for i in range(len(titles)):
+        title_text = titles[i].text.strip()
+        link_url = links[i]['href']
+        listing_id = link_url.split('/')[-1].split('?')[0]
+        listings_list.append((title_text, listing_id))
+    
     return listings_list
     
 
@@ -234,7 +240,12 @@ class TestCases(unittest.TestCase):
         # TODO: Check that the number of listings extracted is 18.
         # TODO: Check that the FIRST (title, id) tuple is  ("Loft in Mission District", "1944564").
 
-        filename = "/Users/lynnvan/SI206/project2-w26-ashka/search_results.html" 
+        filename = "html_files/search_results.html"
+        # "project2-w26-ashka/html_files/search_results.html" 
+        
+        with open(filename, 'r', encoding='utf-8-sig') as f:
+            content = f.read()
+            self.assertTrue(len(content) > 0, "The HTML file is empty.")
         
         results = load_listing_results(filename)
 
