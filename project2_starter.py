@@ -43,16 +43,17 @@ def load_listing_results(html_path) -> list[tuple]:
         
     listings_list = []
     titles = soup.find_all('div', class_='t1jojoys dir dir-ltr')
-    print("titles: ", titles)
+    #print("titles: ", titles)
 
-     <div class="t1jojoys dir dir-ltr" data-testid="listing-card-title" id="title_49043049">Home in Mission District</div>,
-
-    links = soup.find_all('a', class_='cy5jw6o')
+    #  <div class="t1jojoys dir dir-ltr" data-testid="listing-card-title" id="title_49043049">Home in Mission District</div>,
         
     for i in range(len(titles)):
         title_text = titles[i].text.strip()
-        link_url = links[i]['href']
-        listing_id = link_url.split('/')[-1].split('?')[0]
+        #print("individual titles: ", title_text)
+        # link_url = links[i]['href']
+        # listing_id = link_url.split('/')[-1].split('?')[0]
+        listing_id = titles[i].get('id')
+        listing_id = listing_id.split('_')[1].strip()
         listings_list.append((title_text, listing_id))
     
     return listings_list
@@ -78,46 +79,50 @@ def get_listing_details(listing_id) -> dict:
         }
     """
     html_path = f"html_files/listing_{listing_id}.html"
-    with open(html_path, 'r', encoding='utf-8-sig') as f:
-        soup = BeautifulSoup(f, 'html.parser')
+    with open(html_path, 'r') as f:
+        html_content = f.read()
+    
+    soup = BeautifulSoup(html_content, 'html.parser')
 
-        superhost_tag = soup.find(text="Superhost")
-        if superhost_tag: 
-            host_type = "Superhost"
-        else: 
-            host_type = "Regular"
-        
-        host_tag = soup.find('h2', class_='_147n6cc')
-        if host_tag:
-            raw_text = host_tag.text
-            host_name = raw_text.replace("Hosted by ", "")
-        else:
-            host_name = ""  
+    # finding policy number 
 
-        policy_tag = soup.find('li', class_='f19phm70')
-        policy_raw = policy_tag.text if policy_tag else ""
-        
-        if "pending" in policy_raw.lower():
-            policy = "Pending"
-        elif "not needed" in policy_raw.lower() or "exempt" in policy_raw.lower():
-            policy = "Exempt"
-        else:
-            policy = policy_raw.strip()
-        
-        rating_tag = soup.find('span', class_='_17p698z')
-        if rating_tag: 
-            location_rating = float(rating_tag.text)
-        else: 
-            location_rating = 0.0
+    policy_number = soup.find_all("li", class_="f19phm7j dir dir-ltr")[0].text.split(":")[1].strip()
 
-        if "private room" in soup.text.lower():
-            room_type = "Private Room"
-        elif "shared room" in soup.text.lower():
-            room_type = "Shared Room"
-        else:
-            room_type = "Entire Room"
-        
-    return {listing_id: {"policy_number": policy, "host_type": host_type, "host_name": host_name, "room_type": room_type, "location_rating": location_rating}}
+    #finding host type 
+
+    host_type = soup.find('span', class_='_1mhorg9')
+    if host_type and "Superhost" in host_type.text:
+        host_type = "Superhost"
+    else:
+        host_type = "Regular Host"
+
+    # finding host name
+    host_name = soup.find_all("h2", class_="_14i3z6h")[0].text.split("hosted by")[-1].strip()
+
+    # finding room type
+    
+    room_type = soup.find("span", class_="ll4r2nl dir dir-ltr").text.lower()
+    if "private" in room_type:
+        room_type = "Private Room"
+    elif "shared" in room_type:
+        room_type = "Shared Room"
+    else:
+        room_type = "Entire Room"
+
+    #finding the rating
+
+    rating = float(soup.find_all("span", class_="_4oybiu")[3].text)
+
+
+    details = {
+            "policy_number": policy_number,
+            "host_type": host_type,
+            "host_name": host_name,
+            "room_type": room_type,
+            "location_rating": rating
+        }
+
+    return {listing_id: details}
 
 
 def create_listing_database(html_path) -> list[tuple]:
@@ -259,12 +264,21 @@ class TestCases(unittest.TestCase):
         html_list = ["467507", "1550913", "1944564", "4614763", "6092596"]
 
         # TODO: Call get_listing_details() on each listing id above and save results in a list.
+        results = {}
+        for listing_id in html_list:
+            results.update(get_listing_details(listing_id))
+
+
 
         # TODO: Spot-check a few known values by opening the corresponding listing_<id>.html files.
         # 1) Check that listing 467507 has the correct policy number "STR-0005349".
+        self.assertEqual(results["467507"]["policy_number"], "STR-0005349")
         # 2) Check that listing 1944564 has the correct host type "Superhost" and room type "Entire Room".
+        self.assertEqual(results["1944564"]["host_type"], "Superhost")
+        self.assertEqual(results["1944564"]["room_type"], "Entire Room")        
         # 3) Check that listing 1944564 has the correct location rating 4.9.
-        pass
+        self.assertEqual(results["1944564"]["location_rating"], 4.9)
+        
 
     def test_create_listing_database(self):
         # TODO: Check that each tuple in detailed_data has exactly 7 elements:
