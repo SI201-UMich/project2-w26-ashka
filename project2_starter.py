@@ -109,10 +109,9 @@ def get_listing_details(listing_id) -> dict:
     else:
         room_type = "Entire Room"
 
-    #finding the rating
-
+    #finding the location rating
+    
     rating = float(soup.find_all("span", class_="_4oybiu")[3].text)
-
 
     details = {
             "policy_number": policy_number,
@@ -136,14 +135,28 @@ def create_listing_database(html_path) -> list[tuple]:
         list[tuple]: A list of tuples. Each tuple contains:
         (listing_title, listing_id, policy_number, host_type, host_name, room_type, location_rating)
     """
-    # TODO: Implement checkout logic following the instructions
-    # ==============================
-    # YOUR CODE STARTS HERE
-    # ==============================
-    pass
-    # ==============================
-    # YOUR CODE ENDS HERE
-    # ==============================
+
+    base_listings = load_listing_results(html_path)
+    
+    final_database = []
+    
+    for title, listing_id in base_listings:
+        details_dict = get_listing_details(listing_id)
+        info = details_dict[listing_id]
+        
+        listing_tuple = (
+            title, 
+            listing_id, 
+            info["policy_number"], 
+            info["host_type"], 
+            info["host_name"], 
+            info["room_type"], 
+            info["location_rating"]
+        )
+        
+        final_database.append(listing_tuple)
+        
+    return final_database
 
 
 def output_csv(data, filename) -> None:
@@ -285,7 +298,15 @@ class TestCases(unittest.TestCase):
         # (listing_title, listing_id, policy_number, host_type, host_name, room_type, location_rating)
 
         # TODO: Spot-check the LAST tuple is ("Guest suite in Mission District", "467507", "STR-0005349", "Superhost", "Jennifer", "Entire Room", 4.8).
-        pass
+        for listing in self.detailed_data: 
+            self.assertEqual(len(listing), 7)
+
+
+        last_listing = self.detailed_data[-1]
+        expected_output = ("Guest suite in Mission District", "467507", "STR-0005349", "Superhost", "Jennifer", "Entire Room", 4.8)
+        self.assertEqual(last_listing, expected_output)
+
+
 
     def test_output_csv(self):
         out_path = os.path.join(self.base_dir, "test.csv")
