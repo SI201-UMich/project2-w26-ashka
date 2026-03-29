@@ -281,7 +281,30 @@ def google_scholar_searcher(query):
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    pass
+    url = "https://scholar.google.com/scholar"
+    params = {'q': query}
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
+    }
+
+    try:
+
+        response = requests.get(url, params=params, headers=headers)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        title_tags = soup.find_all('h3', class_='gs_rt')
+        
+        titles = []
+        
+        for tag in title_tags:
+            titles.append(tag.text.strip())
+        
+        return titles
+    
+    except Exception as e:
+        print(f'An error occured: {e}')
+        return []
+
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
