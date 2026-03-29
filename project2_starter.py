@@ -243,7 +243,25 @@ def validate_policy_numbers(data) -> list[str]:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    pass
+    invalid_ids = []
+    pattern1 = r'^20\d{2}-00\d{4}STR$'
+    pattern2 = r'^STR-000\d{4}$'
+
+    for listing in data:
+        listing_id = listing[1]
+        policy_num = listing[2]
+
+        policy_num_lower = policy_num.lower()
+        if "pending" in policy_num_lower or "exempt" in policy_num_lower:
+            continue
+
+        match1 = re.match(pattern1, policy_num)
+        match2 = re.match(pattern2, policy_num)
+
+        if not (match1 or match2):
+            invalid_ids.append(listing_id)
+
+    return invalid_ids
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
@@ -359,7 +377,9 @@ class TestCases(unittest.TestCase):
     def test_validate_policy_numbers(self):
         # TODO: Call validate_policy_numbers() on detailed_data and save the result into a variable invalid_listings.
         # TODO: Check that the list contains exactly "16204265" for this dataset.
-        pass
+        invalid_num = validate_policy_numbers(self.detailed_data)
+        self.assertEqual(len(invalid_num), 1, "There should be exactly one invalid policy number.")
+        self.assertEqual(invalid_num[0], "16204265", "The invalid listing ID should be '16204265'.")
 
 
 def main():
