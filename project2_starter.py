@@ -100,8 +100,8 @@ def get_listing_details(listing_id) -> dict:
     host_name = soup.find_all("h2", class_="_14i3z6h")[0].text.split("hosted by")[-1].strip()
 
     # finding room type
-    
-    room_type = soup.find("span", class_="ll4r2nl dir dir-ltr").text.lower()
+
+    room_type = soup.find("h2", class_="_14i3z6h").text.lower()
     if "private" in room_type:
         room_type = "Private Room"
     elif "shared" in room_type:
