@@ -111,7 +111,13 @@ def get_listing_details(listing_id) -> dict:
 
     #finding the location rating
     
-    rating = float(soup.find_all("span", class_="_4oybiu")[3].text)
+    try: 
+        rating = float(soup.find_all("span", class_="_4oybiu")[3].text)
+    except: 
+        rating = 0.0
+
+
+    
 
     details = {
             "policy_number": policy_number,
