@@ -42,10 +42,10 @@ def load_listing_results(html_path) -> list[tuple]:
         soup = BeautifulSoup(f, 'html.parser')
         
     listings_list = []
-    titles = soup.find_all('div', class_='t1jojoys dir dir-ltr')
+    titles = soup.find_all('div', class_='t1jojoys')
     print("titles: ", titles)
 
-     <div class="t1jojoys dir dir-ltr" data-testid="listing-card-title" id="title_49043049">Home in Mission District</div>,
+    # <div class="t1jojoys dir dir-ltr" data-testid="listing-card-title" id="title_49043049">Home in Mission District</div>,
 
     links = soup.find_all('a', class_='cy5jw6o')
         
