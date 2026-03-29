@@ -179,7 +179,16 @@ def output_csv(data, filename) -> None:
     # ==============================
     # YOUR CODE STARTS HERE
     # ==============================
-    pass
+
+    sorted_data = sorted(data, key=lambda x: x[6], reverse=True)
+
+    with open (filename, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+    
+        header = [ "Listing Title", "Listing ID", "Policy Number", "Host Type", "Host Name", "Room Type", "Location Rating"]
+        writer.writerow(header)
+        for row in sorted_data:
+            writer.writerow(row)
     # ==============================
     # YOUR CODE ENDS HERE
     # ==============================
@@ -328,6 +337,16 @@ class TestCases(unittest.TestCase):
         # TODO: Call output_csv() to write the detailed_data to a CSV file.
         # TODO: Read the CSV back in and store rows in a list.
         # TODO: Check that the first data row matches ["Guesthouse in San Francisco", "49591060", "STR-0000253", "Superhost", "Ingrid", "Entire Room", "5.0"].
+        out_path = os.path.join(self.base_dir, "test.csv")
+        output_csv(self.detailed_data, out_path)
+        self.assertTrue(os.path.exists(out_path), "The CSV file was not created.")
+        rows = []
+        with open(out_path, 'r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                rows.append(row)
+        expected_first_row = ["Guesthouse in San Francisco", "49591060", "STR-0000253", "Superhost", "Ingrid", "Entire Room", "5.0"]
+        self.assertEqual(rows[1], expected_first_row, f"Expected {expected_first_row} but got {rows[1]}")
 
         os.remove(out_path)
 
