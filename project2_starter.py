@@ -284,7 +284,7 @@ def google_scholar_searcher(query):
     url = "https://scholar.google.com/scholar"
     params = {'q': query}
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0'
     }
 
     try:
