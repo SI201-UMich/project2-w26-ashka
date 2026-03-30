@@ -19,15 +19,4 @@ web scraping.
     To make sure web scraping is completed ethically and safely, two guidlines I'd create would be:
         - Only scrape information if it is beneficial to the public. For example, checking if a business is following guidlines for it to be open and safety laws. It shouldn't be used if it's to track individuals, sell private information, and anything that would harm the user and their well-being.
         - Only take inforamtion you need and leave everything else. There is no point in scraping all inforamtion if you only need one part of it. For example if you only needed a person's name, there is no need to collect their address, phone numbers, etc. 
-
-r = requests.get('https://api.github.com/user', auth=('user', 'pass'))
-r.status_code
-200
-r.headers['content-type']
-'application/json; charset=utf8'
-r.encoding
-'utf-8'
-r.text
-'{"type":"User"...'}
-r.json()
-{'private_gists': 419, 'total_private_repos': 77, ...}
+    With these guidelines, it can be easier to regulate the use of web scraping by having guidelines in place. Web scraping can alwyas be taken advantage of without the laws in place.
